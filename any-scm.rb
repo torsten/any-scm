@@ -25,22 +25,22 @@
 # See README.md for information
 
 
-DEBUG_PATH = true
+DEBUG_PATH = false
 
 
 def detect_scm from_where
   
-  path = File.expand_path(from_where) if DEBUG_PATH
+  path = File.expand_path(from_where)
   
   loop do
     print "(#{path}) " if DEBUG_PATH
     
     if File.exists? "#{path}/.svn"
-      puts "=> SVN" if DEBUG_PATH
+      puts "=> SVN"
       return :svn
       
     elsif File.exists? "#{path}/.git"
-      puts "=> GIT" if DEBUG_PATH
+      puts "=> GIT"
       return :git
       
     else
@@ -109,7 +109,7 @@ begin
     end
     
   else
-    raise "Sorry, smart-scm.rb does not know anything about a '#{command}' command."
+    raise "Sorry, any-scm.rb does not know anything about a '#{command}' command."
     
   end 
   
