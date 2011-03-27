@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# Copyright (C) 2008-2009 Torsten Becker <torsten.becker@gmail.com>.
+# Copyright (C) 2008-2011 Torsten Becker <torsten.becker@gmail.com>.
 # All rights reserved.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -36,16 +36,20 @@ def detect_scm from_where
     print "(#{path}) " if DEBUG_PATH
     
     if File.exists? "#{path}/.svn"
-      puts "=> SVN"
+      puts "  ★ Subversion"
       return :svn
       
     elsif File.exists? "#{path}/.git"
-      puts "=> GIT"
+      puts "  ★ Git"
       return :git
-      
+    
+    elsif File.exists? "#{path}/.hg"
+      puts "  ★ Mercurial"
+      return :hg
+    
     else
       # If it did not work, terminate
-      raise "Could not find any known version control."  if path == '.'
+      raise "Did not find any known version control system."  if path == '.'
       
       # Remove the last path component
       new_path = path.gsub(%r{/[^/]*$}, '')
@@ -75,7 +79,9 @@ begin
     when :svn
       exec('svn', 'st', *$*)
     when :git
-      exec('git', 'status', *$*)
+      exec('git', 'status', '-sb', *$*)
+    when :hg
+      exec('hg', 'status', *$*)
     end
     
   # Add
@@ -85,6 +91,10 @@ begin
       exec('svn', 'add', *$*)
     when :git
       exec('git', 'add', *$*)
+    when :hg
+      exec('hg', 'add', *$*)
+    else
+      raise "Not implemented"
     end
     
   # Commit
@@ -98,6 +108,10 @@ begin
       else
         exec('git', 'commit', '-v', *$*)
       end
+    when :hg
+      exec('hg', 'commit', *$*)
+    else
+      raise "Not implemented"
     end
     
   when :revert
@@ -105,12 +119,15 @@ begin
     when :svn
       exec('svn', 'revert', *$*)
     when :git
-      exec('git', 'checkout', *$*)
+      exec('git', 'checkout', '--', *$*)
+    when :hg
+      exec('hg', 'revert', *$*)
+    else
+      raise "Not implemented"
     end
-    
+  
   else
     raise "Sorry, any-scm.rb does not know anything about a '#{command}' command."
-    
   end 
   
 rescue
