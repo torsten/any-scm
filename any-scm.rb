@@ -86,6 +86,7 @@ begin
     
   # Add
   when :add
+    raise "'add' needs a file argument" unless $*[0]
     case detect_scm($*[0])
     when :svn
       exec('svn', 'add', *$*)
@@ -113,8 +114,10 @@ begin
     else
       raise "Not implemented"
     end
-    
+  
+  # Revert, in the subversion/hg sense, restore files in the working copy
   when :revert
+    raise "'revert' needs a file argument" unless $*[0]
     case detect_scm($*[0])
     when :svn
       exec('svn', 'revert', *$*)
@@ -122,6 +125,22 @@ begin
       exec('git', 'checkout', '--', *$*)
     when :hg
       exec('hg', 'revert', *$*)
+    else
+      raise "Not implemented"
+    end
+  
+  # Update, in the subversion sense, pull changes and update working copy
+  when :up
+    case detect_scm(($*[0] or Dir.getwd))
+    when :svn
+      exec('svn', 'update', *$*)
+    when :git
+      exec('git', 'pull', *$*)
+    when :hg
+      # This might require the follwing in your ~/.hgrc:
+      # [extensions]
+      # fetch =
+      exec('hg', 'fetch', *$*)
     else
       raise "Not implemented"
     end
