@@ -145,6 +145,24 @@ begin
       raise "Not implemented"
     end
   
+  # Overload diff: when diff with no or a single argument: uses the SCM's diff,
+  # otherwise uses the real tool in /usr/bin or wherever.
+  when :diff
+    if $*.size <= 1
+      case detect_scm(($*[0] or Dir.getwd))
+      when :svn
+        exec('svn', 'diff', *$*)
+      when :git
+        exec('git', 'diff', *$*)
+      when :hg
+        exec('hg', 'diff', '-g', *$*)
+      else
+        raise "Not implemented"
+      end
+    else
+      exec('diff', *$*)
+    end
+  
   else
     raise "Sorry, any-scm.rb does not know anything about a '#{command}' command."
   end 
