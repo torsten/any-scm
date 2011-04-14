@@ -81,6 +81,8 @@ begin
     when :git
       exec('git', 'status', '-sb', *$*)
     when :hg
+      # Make mercurial more git-like and show the current branch for status:
+      puts "## #{`hg branch`}"
       exec('hg', 'status', *$*)
     end
     
