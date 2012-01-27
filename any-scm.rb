@@ -1,3 +1,4 @@
+#!/usr/local/bin/ruby
 #!/usr/bin/env ruby
 
 # Copyright (C) 2008-2011 Torsten Becker <torsten.becker@gmail.com>.
@@ -157,7 +158,7 @@ begin
       when :git
         exec('git', 'diff', *$*)
       when :hg
-        exec('hg', 'diff', '-g', *$*)
+        exec('hg', 'diff', '-gp', *$*)
       else
         raise "Not implemented"
       end
