@@ -1,5 +1,5 @@
-#!/usr/local/bin/ruby
 #!/usr/bin/env ruby
+#!/usr/local/bin/ruby
 
 # Copyright (C) 2008-2011 Torsten Becker <torsten.becker@gmail.com>.
 # All rights reserved.
