@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-#!/usr/local/bin/ruby
+# -*- coding: utf-8 -*-
 
 # Copyright (C) 2008-2011 Torsten Becker <torsten.becker@gmail.com>.
 # All rights reserved.
